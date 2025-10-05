@@ -1,0 +1,88 @@
+<div class="chart-container w-full bg-crypto-navy/90 backdrop-blur-sm rounded-xl shadow-2xl border border-crypto-green/20">
+  <div class="flex justify-between items-center p-6 border-b border-crypto-green/20">
+    <div class="flex items-center space-x-4">
+      <h3 class="text-2xl font-bold text-white drop-shadow-lg flex items-center gap-2" 
+          style="color: #ffffff; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">
+        {{ ticker }}
+      </h3>
+      
+      <div class="flex items-center space-x-2">
+        <div *ngIf="isPriceLoading" class="animate-pulse">
+          <div class="h-6 bg-gradient-to-r from-crypto-navy-light via-crypto-green/30 to-crypto-navy-light bg-[length:200%_100%] animate-shimmer rounded w-20"></div>
+        </div>
+        
+        <div class="text-xl font-bold text-white drop-shadow-lg" *ngIf="!isPriceLoading && currentPrice > 0">
+          ${{ currentPrice | number:'1.2-2' }}
+        </div>
+        
+        <div *ngIf="isPriceLoading" class="animate-pulse">
+          <div class="h-4 bg-gradient-to-r from-crypto-navy-light via-crypto-green/30 to-crypto-navy-light bg-[length:200%_100%] animate-shimmer rounded w-16"></div>
+        </div>
+        
+        <div class="text-sm font-bold drop-shadow-lg" 
+             [ngClass]="{
+               'text-green-400': priceChange > 0,
+               'text-red-400': priceChange < 0,
+               'text-gray-300': priceChange === 0
+             }"
+             *ngIf="!isPriceLoading && priceChange !== 0">
+          <span class="flex items-center gap-1 px-2 py-1 rounded-lg"
+                [ngClass]="{
+                  'bg-green-500/20 border border-green-400/30': priceChange > 0,
+                  'bg-red-500/20 border border-red-400/30': priceChange < 0,
+                  'bg-gray-500/20 border border-gray-400/30': priceChange === 0
+                }">
+            <span *ngIf="priceChange > 0" class="text-green-300">📈</span>
+            <span *ngIf="priceChange < 0" class="text-red-300">📉</span>
+            <span *ngIf="priceChange === 0" class="text-gray-300">➡️</span>
+            {{ priceChange > 0 ? '+' : '' }}${{ priceChange | number:'1.2-2' }} 
+            ({{ priceChange > 0 ? '+' : '' }}{{ priceChangePercent | number:'1.2-2' }}%)
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    <button (click)="toggleFullDayView()" class="px-6 py-3 bg-crypto-green text-crypto-navy-dark rounded-xl font-bold transition-all duration-300 shadow-lg hover:bg-crypto-green-light hover:text-crypto-navy-dark hover:scale-105 active:bg-crypto-green-dark active:scale-95 border-2 border-crypto-green-dark hover:border-crypto-green-light focus:outline-none focus:ring-4 focus:ring-crypto-green/50 flex items-center gap-2">
+      <span *ngIf="fullDayMode">Vista Actual</span>
+      <span *ngIf="!fullDayMode">Gráfico Completo</span>
+    </button>
+  </div>
+  
+  <div class="p-6 h-96 relative">
+    <div *ngIf="isChartLoading" class="absolute inset-0 flex items-center justify-center bg-crypto-navy/95 backdrop-blur-sm rounded-xl z-20">
+      <div class="text-center">
+        <div class="relative">
+          <div class="animate-spin rounded-full h-12 w-12 border-4 border-crypto-green/30 border-t-crypto-green mx-auto mb-3"></div>
+          <div class="absolute top-1.5 left-1.5 animate-pulse rounded-full h-9 w-9 bg-crypto-green/20 opacity-75"></div>
+        </div>
+        <p class="text-sm font-medium text-crypto-green-light">Cargando gráfico...</p>
+      </div>
+    </div>
+
+    <div *ngIf="isLoading && !isChartLoading" class="absolute inset-0 flex items-center justify-center bg-crypto-navy/95 backdrop-blur-sm rounded-xl z-10">
+      <div class="text-center">
+        <div class="relative">
+          <div class="animate-spin rounded-full h-12 w-12 border-4 border-crypto-green/30 border-t-crypto-green mx-auto mb-3"></div>
+          <div class="absolute top-1.5 left-1.5 animate-pulse rounded-full h-9 w-9 bg-crypto-green/20 opacity-75"></div>
+        </div>
+        <p class="text-sm font-medium text-crypto-green-light">Cargando datos...</p>
+      </div>
+    </div>
+
+    <div *ngIf="!isLoading && !isChartLoading && currentPrice === 0" class="absolute inset-0 flex items-center justify-center bg-crypto-navy/95 backdrop-blur-sm rounded-xl z-10">
+      <div class="text-center">
+        <div class="text-6xl mb-4 opacity-50">📊</div>
+        <p class="text-lg font-bold text-white flex items-center justify-center gap-2">
+          Sin datos disponibles
+        </p>
+        <p class="text-sm text-crypto-green-light mt-1">Esperando información de {{ ticker }}</p>
+        <button (click)="subscribeToData()" class="mt-4 px-6 py-3 bg-crypto-gold text-crypto-navy-dark rounded-xl hover:bg-crypto-gold-light hover:text-crypto-navy-dark transition-all duration-300 font-bold shadow-lg hover:scale-105 active:bg-crypto-gold-dark active:scale-95 border-2 border-crypto-gold-dark hover:border-crypto-gold-light focus:outline-none focus:ring-4 focus:ring-crypto-gold/50 flex items-center gap-2 mx-auto">
+          <span>Reintentar conexión</span>
+        </button>
+      </div>
+    </div>
+    
+    <canvas #chartCanvas class="transition-opacity duration-500 rounded-lg">
+    </canvas>
+  </div>
+</div>

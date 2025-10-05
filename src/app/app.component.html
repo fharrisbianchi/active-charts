@@ -1,0 +1,45 @@
+<div class="min-h-screen bg-crypto-gradient animate-gradient relative overflow-hidden">
+  <!-- Componente de fondo dinámico -->
+  <app-crypto-background></app-crypto-background>
+  
+  <!-- Elementos de fondo dinámico adicionales -->
+  <div class="absolute inset-0 opacity-10">
+    <div class="absolute top-10 left-10 w-20 h-20 bg-crypto-gold rounded-full animate-float"></div>
+    <div class="absolute top-32 right-20 w-16 h-16 bg-crypto-green rounded-full animate-float" style="animation-delay: 1s;"></div>
+    <div class="absolute bottom-20 left-1/4 w-12 h-12 bg-crypto-cyan rounded-full animate-float" style="animation-delay: 2s;"></div>
+    <div class="absolute bottom-40 right-1/3 w-24 h-24 bg-crypto-gold-light rounded-full animate-float" style="animation-delay: 0.5s;"></div>
+    
+    <!-- Patrones geométricos crypto -->
+    <div class="absolute top-1/4 left-1/2 transform -translate-x-1/2">
+      <div class="w-32 h-32 border-2 border-crypto-green opacity-20 rotate-45 animate-pulse-slow"></div>
+    </div>
+    <div class="absolute bottom-1/4 right-10">
+      <div class="w-24 h-24 border-2 border-crypto-cyan opacity-20 rotate-12 animate-pulse-slow" style="animation-delay: 1.5s;"></div>
+    </div>
+  </div>
+
+  <div class="relative z-10 p-4">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-8">
+        <h1 class="text-5xl font-bold text-white mb-2 drop-shadow-lg">
+          CryptoCharts Pro
+        </h1>
+        <p class="text-crypto-green-light text-lg font-medium">
+          Análisis en tiempo real de criptomonedas
+        </p>
+      </div>
+      
+      <app-ticker-selector 
+        (tickerSelected)="onTickerSelected($event)">
+      </app-ticker-selector>
+      
+      <app-stock-chart 
+        [ticker]="selectedTicker"
+        [fullDayMode]="fullDayMode"
+        (viewModeChanged)="onViewModeChanged($event)">
+      </app-stock-chart>
+    </div>
+  </div>
+</div>
+
+<router-outlet />
